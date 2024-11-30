@@ -1,0 +1,14 @@
+reservation:
+  reservation_date: "2024-12-01"
+  reservation_time: "19:00"
+  member_count: 4
+  course_name: "コース名"
+  insurance_symbol_number: 1234
+  business_operator_name: "事業者名"
+  representative_name: "代表者名"
+  work_phone_number: "03-1234-5678"
+reservers:
+  - name: "田中 太郎"
+    insurance_number: 123
+  - name: "山田 花子"
+    insurance_number: 456
