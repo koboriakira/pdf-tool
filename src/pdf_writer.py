@@ -2,6 +2,7 @@ import os
 from dataclasses import dataclass
 
 import pymupdf
+from pymupdf import Page
 
 
 @dataclass
@@ -14,6 +15,14 @@ class InsertProperty:
     color: tuple[int, int, int] | None = None
     label: str = ""
 
+    @property
+    def x(self) -> int:
+        return self.pos[0]
+
+    @property
+    def y(self) -> int:
+        return self.pos[1]
+
 
 class PdfWriter:
     def __init__(
@@ -23,6 +32,9 @@ class PdfWriter:
         default_font_path: str = "/Library/Fonts/PlemolJPConsoleNF-Regular.ttf",
         default_font_size: int = 12,
     ):
+        if not os.path.exists(input_path):
+            msg = f"PDFファイルが見つかりません: {input_path}"
+            raise FileNotFoundError(msg)
         self._input_path = input_path
         self._output_path = output_path
         self._default_font_path = default_font_path
@@ -33,29 +45,28 @@ class PdfWriter:
         self._font_name = "DefaultFont"
         self._default_font_color = (0, 0, 0)
 
-    def execute(self, properties: list[InsertProperty]):
+    def execute(self, properties: list[InsertProperty], page_num: int = 1):
+        # フォントを登録
         pymupdf.Font(fontname=self._font_name, fontfile=self._default_font_path)
 
-        # 元のPDFファイルを開く
+        # PDFファイルを開く
         doc = pymupdf.open(self._input_path)
 
-        # テキストを追加するページ番号（0始まり）
-        page_number = 0
-        page = doc[page_number]
-
-        # テキストを追加する位置（x, y座標）
+        # ページを指定して、テキストを追加
+        page = doc[page_num - 1]
         for p in properties:
-            page.insert_text(
-                (p.pos[0], p.pos[1]),  # 位置
-                p.text,  # テキスト
-                fontsize=p.fontsize or self._default_font_size,  # フォントサイズ
-                fontname=p.fontname or self._font_name,
-                fontfile=p.fontfile or self._default_font_path,  # フォントファイル
-                color=p.color or self._default_font_color,  # テキストの色
-            )
+            self._insert_text(page, p)
 
         # 変更を保存
         doc.save(self._output_path)
         doc.close()
 
-        print(f"テキストを追加したPDFを保存しました: {self._output_path}")
+    def _insert_text(self, page: Page, prop: InsertProperty) -> int:
+        return page.insert_text(
+            (prop.x, prop.y),
+            prop.text,
+            fontsize=prop.fontsize or self._default_font_size,
+            fontname=prop.fontname or self._font_name,
+            fontfile=prop.fontfile or self._default_font_path,
+            color=prop.color or self._default_font_color,
+        )
