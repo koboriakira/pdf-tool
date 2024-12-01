@@ -44,15 +44,9 @@ class Reservation:
             InsertProperty(
                 pos=(215, 182), text=str(day_name), label="利用曜日", fontsize=10
             ),
+            InsertProperty(pos=(135, 210), text=str(time_.hour), label="利用時間(時)"),
             InsertProperty(
-                pos=(135, 210),
-                text=str(time_.hour),
-                label="利用時間(時)",
-            ),
-            InsertProperty(
-                pos=(178, 210),
-                text=str(time_.strftime("%M")),
-                label="利用時間(分)",
+                pos=(178, 210), text=str(time_.strftime("%M")), label="利用時間(分)"
             ),
             InsertProperty(
                 pos=(200, 238), text=str(self.member_count), label="内部メンバー人数"
@@ -64,19 +58,13 @@ class Reservation:
                 label="保険証の記号",
             ),
             InsertProperty(
-                pos=(380, 211),
-                text=self.business_operator_name,
-                label="事業者名",
+                pos=(380, 211), text=self.business_operator_name, label="事業者名"
             ),
             InsertProperty(
-                pos=(410, 247),
-                text=self.representative_name,
-                label="利用代表者名",
+                pos=(410, 247), text=self.representative_name, label="利用代表者名"
             ),
             InsertProperty(
-                pos=(396, 290),
-                text=self.work_phone_number,
-                label="勤務先電話番号",
+                pos=(396, 290), text=self.work_phone_number, label="勤務先電話番号"
             ),
         ]
 
