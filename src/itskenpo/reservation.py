@@ -34,69 +34,52 @@ class Reservation:
             return Reservation(reservers=reservers, **config["reservation"])
 
     def to_insert_properties(self) -> list[InsertProperty]:
-        insert_properties = []
-        reservation_date_ = date.fromisoformat(self.reservation_date)
-        reservation_time_ = time.fromisoformat(str(self.reservation_time))
-        insert_properties.append(
+        date_ = date.fromisoformat(self.reservation_date)
+        time_ = time.fromisoformat(str(self.reservation_time))
+        day_name = ["月", "火", "水", "木", "金", "土", "日"][date_.weekday()]
+
+        insert_properties = [
+            InsertProperty(pos=(135, 182), text=str(date_.month), label="利用月"),
+            InsertProperty(pos=(180, 182), text=str(date_.day), label="利用日"),
             InsertProperty(
-                pos=(135, 182), text=str(reservation_date_.month), label="利用月"
-            )
-        )
-        insert_properties.append(
-            InsertProperty(
-                pos=(180, 182), text=str(reservation_date_.day), label="利用日"
-            )
-        )
-        insert_properties.append(
+                pos=(215, 182), text=str(day_name), label="利用曜日", fontsize=10
+            ),
             InsertProperty(
                 pos=(135, 210),
-                text=str(reservation_time_.hour),
+                text=str(time_.hour),
                 label="利用時間(時)",
-            )
-        )
-        insert_properties.append(
+            ),
             InsertProperty(
                 pos=(178, 210),
-                text=str(reservation_time_.strftime("%M")),
+                text=str(time_.strftime("%M")),
                 label="利用時間(分)",
-            )
-        )
-        insert_properties.append(
+            ),
             InsertProperty(
                 pos=(200, 238), text=str(self.member_count), label="内部メンバー人数"
-            )
-        )
-        insert_properties.append(
-            InsertProperty(pos=(155, 290), text=self.course_name, label="コース名")
-        )
-        insert_properties.append(
+            ),
+            InsertProperty(pos=(155, 290), text=self.course_name, label="コース名"),
             InsertProperty(
                 pos=(420, 184),
                 text=str(self.insurance_symbol_number),
                 label="保険証の記号",
-            )
-        )
-        insert_properties.append(
+            ),
             InsertProperty(
                 pos=(380, 211),
                 text=self.business_operator_name,
                 label="事業者名",
-            )
-        )
-        insert_properties.append(
+            ),
             InsertProperty(
                 pos=(410, 247),
                 text=self.representative_name,
                 label="利用代表者名",
-            )
-        )
-        insert_properties.append(
+            ),
             InsertProperty(
                 pos=(396, 290),
                 text=self.work_phone_number,
                 label="勤務先電話番号",
-            )
-        )
+            ),
+        ]
+
         if self.reservers is None:
             return insert_properties
 
